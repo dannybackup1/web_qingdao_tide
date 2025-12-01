@@ -134,14 +134,17 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
         ],
     };
 
-    // Plugin to draw patterns
+    // Plugin to draw patterns behind the chart
     const patternPlugin = {
         id: 'patternPlugin',
-        afterDatasetsDraw(chart: any) {
+        beforeDatasetsDraw(chart: any) {
             const ctx = chart.ctx;
             const chartArea = chart.chartArea;
             const yScale = chart.scales.y;
             const zeroPixel = yScale.getPixelForValue(0);
+
+            // Save context state
+            ctx.save();
 
             if (zeroPixel < chartArea.bottom && zeroPixel > chartArea.top) {
                 // Draw sand pattern above zero
@@ -158,6 +161,9 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
                     ctx.fillRect(chartArea.left, zeroPixel, chartArea.width, chartArea.bottom - zeroPixel);
                 }
             }
+
+            // Restore context state
+            ctx.restore();
         }
     };
 
