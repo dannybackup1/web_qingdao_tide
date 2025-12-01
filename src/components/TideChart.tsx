@@ -141,7 +141,6 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
             const ctx = chart.ctx;
             const chartArea = chart.chartArea;
             const yScale = chart.scales.y;
-            const xScale = chart.scales.x;
             const zeroPixel = yScale.getPixelForValue(0);
 
             if (zeroPixel < chartArea.bottom && zeroPixel > chartArea.top) {
