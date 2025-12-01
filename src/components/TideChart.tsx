@@ -219,23 +219,25 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
         <div style={{
             margin: '32px 0',
             padding: 12,
-            border: '1px solid #eee',
+            border: '1px solid rgba(238, 238, 238, 0.3)',
             borderRadius: 8,
-            background: sandColor // '#F7E7B4'
+            background: 'rgba(247, 231, 180, 0.95)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+            backdropFilter: 'blur(10px)'
         }}>
             {/* 日期和汛型并排，左上角显示 */}
             {date && (
-                <div style={{ fontWeight: 'bold', fontSize: 18, display: 'flex', alignItems: 'center' }}>
+                <div style={{ fontWeight: 'bold', fontSize: 18, display: 'flex', alignItems: 'center', color: '#333' }}>
                     <span>{date}</span>
                     {children && <span style={{ marginLeft: 12 }}>{children}</span>}
                 </div>
             )}
             <div style={{ margin: '8px 0', fontSize: 15 }}>
-                <span style={{ color: 'red', marginRight: 12 }}>高潮: {highTides.map(d => d.time.slice(11, 16)).join(' | ') || '无'}</span>
-                <span style={{ color: 'green' }}>低潮: {lowTides.map(d => d.time.slice(11, 16)).join(' | ') || '无'}</span>
+                <span style={{ color: '#d32f2f', marginRight: 12, fontWeight: 500 }}>高潮: {highTides.map(d => d.time.slice(11, 16)).join(' | ') || '无'}</span>
+                <span style={{ color: '#388e3c', fontWeight: 500 }}>低潮: {lowTides.map(d => d.time.slice(11, 16)).join(' | ') || '无'}</span>
             </div>
-            <div style={{ height: 260 }}>
-                <Line data={chartData} options={options} />
+            <div style={{ height: 260, position: 'relative' }}>
+                <Line ref={chartRef} data={chartData} options={options} plugins={[patternPlugin]} />
             </div>
         </div>
     );
