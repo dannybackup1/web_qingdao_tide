@@ -68,7 +68,7 @@ const IndexPage: React.FC = () => {
                 {camImgUrls.map((url, idx) => (
                     <div key={idx} style={{ flex: 1, textAlign: 'center' }}>
                         <div style={{ fontWeight: 'bold', marginBottom: 12, color: '#1a5490', fontSize: 16 }}>{camNames[idx]}</div>
-                        <div style={{ background: 'rgba(255, 255, 255, 0.1)', height: 180, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)' }}>
+                        <div style={{ background: 'rgba(200, 230, 245, 0.4)', height: 180, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(100, 180, 220, 0.3)', boxShadow: '0 4px 12px rgba(100, 150, 200, 0.1)' }}>
                             <img
                                 src={url}
                                 alt={camNames[idx] + '实时图像'}
@@ -80,7 +80,7 @@ const IndexPage: React.FC = () => {
                 ))}
             </div>
             {/* copyright 信息 */}
-            <div style={{ marginTop: 60, width: '100%', textAlign: 'center', color: 'rgba(255, 255, 255, 0.5)', fontSize: 14, paddingBottom: 24, textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)' }}>
+            <div style={{ marginTop: 60, width: '100%', textAlign: 'center', color: '#6b9fb0', fontSize: 14, paddingBottom: 24 }}>
                 Copyright © {new Date().getFullYear()}
             </div>
         </div>
