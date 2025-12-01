@@ -28,7 +28,7 @@ function getLunarDateStr(solarDate: string): string {
         const lunarMonth = lunar.getMonthInChinese(); // 例如 "十月"
         const lunarDay = lunar.getDayInChinese();     // 例如 "十三"
 
-        return `${lunarMonth}${lunarDay}`;
+        return `${lunarMonth}月${lunarDay}`;
     } catch (e) {
         console.error('Error converting lunar date:', solarDate, e);
         return '';
