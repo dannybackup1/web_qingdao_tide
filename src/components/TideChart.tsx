@@ -27,12 +27,12 @@ function createSandPattern(ctx: CanvasRenderingContext2D, width: number, height:
 
     if (!patternCtx) return null;
 
-    // Sand base
-    patternCtx.fillStyle = '#F7E7B4';
+    // Sand base (white)
+    patternCtx.fillStyle = '#FFFFFF';
     patternCtx.fillRect(0, 0, width, height);
 
     // Add footprints
-    patternCtx.fillStyle = 'rgba(210, 180, 100, 0.4)';
+    patternCtx.fillStyle = 'rgba(200, 200, 200, 0.3)';
     const footprints = [
         { x: 30, y: 20 }, { x: 50, y: 35 }, { x: 70, y: 45 },
         { x: 100, y: 30 }, { x: 120, y: 50 }, { x: 150, y: 25 },
@@ -89,7 +89,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
     const highTides = data.filter(d => d.type === '高潮');
     const lowTides = data.filter(d => d.type === '低潮');
 
-    const sandColor = '#F7E7B4'; // 沙滩色
+    const sandColor = '#FFFFFF'; // 沙滩色（白色）
     const seaColor = '#3A8DFF'; // 海水蓝色
 
     const chartData = {
