@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { TideData } from '../types/tide';
+import { Chart as ChartJS } from 'chart.js';
 
 interface TideChartProps {
     data: TideData[];
@@ -18,7 +19,73 @@ function getDateStr(timeStr: string) {
     return tIdx !== -1 ? timeStr.slice(0, tIdx) : timeStr;
 }
 
+// Create sand pattern with footprints
+function createSandPattern(ctx: CanvasRenderingContext2D, width: number, height: number) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const patternCtx = canvas.getContext('2d');
+
+    if (!patternCtx) return null;
+
+    // Sand base
+    patternCtx.fillStyle = '#F7E7B4';
+    patternCtx.fillRect(0, 0, width, height);
+
+    // Add footprints
+    patternCtx.fillStyle = 'rgba(210, 180, 100, 0.4)';
+    const footprints = [
+        { x: 30, y: 20 }, { x: 50, y: 35 }, { x: 70, y: 45 },
+        { x: 100, y: 30 }, { x: 120, y: 50 }, { x: 150, y: 25 },
+        { x: 180, y: 40 }, { x: 200, y: 20 }, { x: 230, y: 45 }
+    ];
+
+    footprints.forEach(fp => {
+        // Draw oval footprints
+        patternCtx.beginPath();
+        patternCtx.ellipse(fp.x % width, fp.y % height, 8, 12, 0.3, 0, Math.PI * 2);
+        patternCtx.fill();
+    });
+
+    return patternCtx.createPattern(canvas, 'repeat');
+}
+
+// Create water pattern with waves
+function createWaterPattern(ctx: CanvasRenderingContext2D, width: number, height: number) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const patternCtx = canvas.getContext('2d');
+
+    if (!patternCtx) return null;
+
+    // Water base
+    patternCtx.fillStyle = '#3A8DFF';
+    patternCtx.fillRect(0, 0, width, height);
+
+    // Add wave pattern
+    patternCtx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    patternCtx.lineWidth = 1.5;
+
+    for (let i = 0; i < 5; i++) {
+        patternCtx.beginPath();
+        const startX = -20;
+        const startY = i * 30;
+        patternCtx.moveTo(startX, startY);
+
+        for (let x = startX; x < width + 20; x += 10) {
+            const y = startY + Math.sin((x + startY) * 0.05) * 8;
+            patternCtx.lineTo(x, y);
+        }
+        patternCtx.stroke();
+    }
+
+    return patternCtx.createPattern(canvas, 'repeat');
+}
+
 const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
+    const chartRef = useRef<any>(null);
+
     // 提取所有高潮和低潮时间
     const highTides = data.filter(d => d.type === '高潮');
     const lowTides = data.filter(d => d.type === '低潮');
@@ -26,23 +93,83 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
     const sandColor = '#F7E7B4'; // 沙滩色
     const seaColor = '#3A8DFF'; // 海水蓝色
 
+    // Calculate min and max for gradient positioning
+    const minHeight = Math.min(...data.map(d => d.height));
+    const maxHeight = Math.max(...data.map(d => d.height));
+
     const chartData = {
         labels: data.map(d => formatTime(d.time)),
         datasets: [
             {
                 label: 'Tide Height (m)',
                 data: data.map(d => d.height),
-                borderColor: seaColor,
-                backgroundColor: seaColor,
-                fill: 'origin',
+                borderColor: '#2C7FD9',
+                borderWidth: 2,
+                backgroundColor: function(context: any) {
+                    const ctx = context.chart.ctx;
+                    const chartArea = context.chart.chartArea;
+
+                    if (!chartArea) return seaColor;
+
+                    // Get the yAxis scale
+                    const yScale = context.chart.scales.y;
+                    const zeroPixel = yScale.getPixelForValue(0);
+
+                    // Create gradient
+                    const gradient = ctx.createLinearGradient(0, 0, 0, chartArea.bottom);
+
+                    // Map colors based on zero line position
+                    const zeroPercent = (zeroPixel - chartArea.top) / (chartArea.bottom - chartArea.top);
+
+                    // Above zero (sand), below zero (water)
+                    gradient.addColorStop(0, sandColor);
+                    gradient.addColorStop(Math.max(0, zeroPercent - 0.05), sandColor);
+                    gradient.addColorStop(Math.min(1, zeroPercent + 0.05), seaColor);
+                    gradient.addColorStop(1, seaColor);
+
+                    return gradient;
+                },
+                fill: true,
                 pointRadius: data.map(d => d.type ? 6 : 2),
-                pointBackgroundColor: data.map(d => d.type === '高潮' ? 'red' : d.type === '低潮' ? 'green' : seaColor),
+                pointBackgroundColor: data.map(d => d.type === '高潮' ? 'red' : d.type === '低潮' ? 'green' : '#2C7FD9'),
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                tension: 0.4,
             },
         ],
     };
 
+    // Plugin to draw patterns
+    const patternPlugin = {
+        id: 'patternPlugin',
+        afterDatasetsDraw(chart: any) {
+            const ctx = chart.ctx;
+            const chartArea = chart.chartArea;
+            const yScale = chart.scales.y;
+            const xScale = chart.scales.x;
+            const zeroPixel = yScale.getPixelForValue(0);
+
+            if (zeroPixel < chartArea.bottom && zeroPixel > chartArea.top) {
+                // Draw sand pattern above zero
+                const sandPattern = createSandPattern(ctx, chartArea.width, zeroPixel - chartArea.top);
+                if (sandPattern) {
+                    ctx.fillStyle = sandPattern;
+                    ctx.fillRect(chartArea.left, chartArea.top, chartArea.width, zeroPixel - chartArea.top);
+                }
+
+                // Draw water pattern below zero
+                const waterPattern = createWaterPattern(ctx, chartArea.width, chartArea.bottom - zeroPixel);
+                if (waterPattern) {
+                    ctx.fillStyle = waterPattern;
+                    ctx.fillRect(chartArea.left, zeroPixel, chartArea.width, chartArea.bottom - zeroPixel);
+                }
+            }
+        }
+    };
+
     const options = {
         maintainAspectRatio: false,
+        responsive: true,
         plugins: {
             tooltip: {
                 callbacks: {
@@ -53,15 +180,37 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, children }) => {
                         if (d.type) label += ` (${d.type})`;
                         return label;
                     }
-                }
+                },
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#ddd',
+                borderWidth: 1,
+                padding: 10,
+                displayColors: false,
             },
             legend: {
-                display: false // 隐藏图例
-            }
+                display: false
+            },
+            patternPlugin: {}
         },
         scales: {
             y: {
-                beginAtZero: false
+                beginAtZero: true,
+                ticks: {
+                    color: '#666',
+                },
+                grid: {
+                    color: 'rgba(200, 200, 200, 0.1)',
+                }
+            },
+            x: {
+                ticks: {
+                    color: '#666',
+                },
+                grid: {
+                    color: 'rgba(200, 200, 200, 0.1)',
+                }
             }
         }
     };
