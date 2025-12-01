@@ -43,10 +43,10 @@ const IndexPage: React.FC = () => {
 
     return (
         <div>
-            <div style={{display:'flex',justifyContent:'flex-end',alignItems:'center',fontWeight:'bold',fontSize:16,marginBottom:8}}>
+            <div style={{display:'flex',justifyContent:'flex-end',alignItems:'center',fontWeight:'bold',fontSize:16,marginBottom:8,color:'#fff',textShadow:'0 2px 4px rgba(0, 0, 0, 0.3)'}}>
                 Tide Height (m)
             </div>
-            <h1>青岛未来两天潮汐数据</h1>
+            <h1 style={{textAlign:'center'}}>青岛未来两天潮汐数据</h1>
             {tideDays.slice(0, 2).map((day, idx) => { // 只显示前两天
                 const tideType = day.type;
                 return (
@@ -56,22 +56,23 @@ const IndexPage: React.FC = () => {
                             data={day.data}
                             date={day.date}
                         >
-                            <span style={{marginLeft:12,fontSize:16,fontWeight:'bold'}}>{tideType}</span>
+                            <span style={{marginLeft:12,fontSize:16,fontWeight:'bold',color:'#333'}}>{tideType}</span>
                         </TideChart>
                     </div>
                 );
             })}
             {/* 三个实时图像分区，地点为石老人、栈桥、小麦岛 */}
             <div style={{ height: 24 }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 32 }}>
+            <h2 style={{color:'#fff',marginTop:40,marginBottom:24,textShadow:'0 2px 8px rgba(0, 0, 0, 0.3)',textAlign:'center',fontSize:20}}>实时图像</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 32, gap: '12px' }}>
                 {camImgUrls.map((url, idx) => (
-                    <div key={idx} style={{ flex: 1, textAlign: 'center', margin: '0 8px' }}>
-                        <div style={{ fontWeight: 'bold', marginBottom: 8 }}>{camNames[idx]}</div>
-                        <div style={{ background: '#eee', height: 180, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                    <div key={idx} style={{ flex: 1, textAlign: 'center' }}>
+                        <div style={{ fontWeight: 'bold', marginBottom: 12, color: '#fff', fontSize: 16, textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)' }}>{camNames[idx]}</div>
+                        <div style={{ background: 'rgba(255, 255, 255, 0.1)', height: 180, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)' }}>
                             <img
                                 src={url}
                                 alt={camNames[idx] + '实时图像'}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', borderRadius: 8 }}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', borderRadius: 12 }}
                                 draggable={false}
                             />
                         </div>
@@ -79,7 +80,7 @@ const IndexPage: React.FC = () => {
                 ))}
             </div>
             {/* copyright 信息 */}
-            <div style={{ marginTop: 40, width: '100%', textAlign: 'center', color: '#888', fontSize: 14, paddingBottom: 24 }}>
+            <div style={{ marginTop: 60, width: '100%', textAlign: 'center', color: 'rgba(255, 255, 255, 0.5)', fontSize: 14, paddingBottom: 24, textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)' }}>
                 Copyright © {new Date().getFullYear()}
             </div>
         </div>
