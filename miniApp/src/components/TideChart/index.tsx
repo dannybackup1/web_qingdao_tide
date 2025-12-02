@@ -20,7 +20,8 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
 
     const drawChart = async () => {
       try {
-        const ctx = Taro.createCanvasContext(canvasId);
+        // Use this for proper component context in Taro
+        const ctx = Taro.createCanvasContext(canvasId, this);
         if (!ctx) return;
 
         const renderer = new TideChartRenderer(data, {
@@ -30,12 +31,18 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         });
 
         renderer.drawChart(ctx);
+
+        // Add a small delay to ensure canvas is ready
+        await new Promise(resolve => setTimeout(resolve, 100));
         ctx.draw();
       } catch (error) {
+        console.error('Chart rendering error:', error);
       }
     };
 
-    drawChart();
+    // Use a small delay to ensure component is mounted
+    const timer = setTimeout(drawChart, 200);
+    return () => clearTimeout(timer);
   }, [data, canvasId]);
 
   const highTides = data.filter(d => d.type === '高潮');
