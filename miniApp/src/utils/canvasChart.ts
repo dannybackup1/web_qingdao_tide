@@ -64,15 +64,22 @@ export class TideChartRenderer {
   }
 
   drawChart(ctx: CanvasRenderingContext2D): void {
-    this.drawBackground(ctx);
-    if (this.config.gridLines) {
-      this.drawGridLines(ctx);
+    try {
+      console.log('Starting chart render with config:', this.config);
+      this.drawBackground(ctx);
+      if (this.config.gridLines) {
+        this.drawGridLines(ctx);
+      }
+      this.drawAxes(ctx);
+      this.drawTideArea(ctx);
+      this.drawCurve(ctx);
+      this.drawPoints(ctx);
+      this.drawLabels(ctx);
+      console.log('Chart render completed successfully');
+    } catch (err) {
+      console.error('Error during chart render:', err);
+      throw err;
     }
-    this.drawAxes(ctx);
-    this.drawTideArea(ctx);
-    this.drawCurve(ctx);
-    this.drawPoints(ctx);
-    this.drawLabels(ctx);
   }
 
   private drawBackground(ctx: CanvasRenderingContext2D): void {
