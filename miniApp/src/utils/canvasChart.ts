@@ -104,8 +104,8 @@ export class TideChartRenderer {
   }
 
   private drawAxes(ctx: CanvasRenderingContext2D): void {
-    ctx.strokeStyle = '#999';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
 
     ctx.beginPath();
     ctx.moveTo(this.config.padding, this.config.height - this.config.padding);
@@ -119,17 +119,17 @@ export class TideChartRenderer {
 
     ctx.fillStyle = '#666';
     try {
-      (ctx as any).font = '24px sans-serif';
+      (ctx as any).font = 'bold 14px sans-serif';
     } catch (e) {
       console.warn('Font property not supported');
     }
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
 
     for (let i = 0; i <= 4; i++) {
       const height = this.minHeight + ((this.maxHeight - this.minHeight) / 4) * i;
       const y = this.config.height - this.config.padding - ((height - this.minHeight) / (this.maxHeight - this.minHeight)) * (this.config.height - 2 * this.config.padding);
-      ctx.fillText(height.toFixed(1), this.config.padding - 40, y - 12);
+      ctx.fillText(height.toFixed(1), this.config.padding - 15, y);
     }
   }
 
