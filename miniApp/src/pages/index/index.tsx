@@ -20,13 +20,10 @@ const IndexPage: React.FC = () => {
   useEffect(() => {
     const getTideData = async () => {
       try {
-        console.error('[IndexPage] Fetching tide data...');
         const data = await fetchTideData();
-        console.error('[IndexPage] Received', data.length, 'days of data');
         setTideDays(data);
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
-        console.error('[IndexPage] Error:', errMsg);
         setError(errMsg);
       } finally {
         setLoading(false);
@@ -61,44 +58,46 @@ const IndexPage: React.FC = () => {
   }
 
   return (
-    <ScrollView className={styles.container} scrollY>
-      <View className={styles.titleSection}>
-        <Text className={styles.titleLabel}>Tide Height (m)</Text>
-      </View>
-      <Text className={styles.mainTitle}>青岛未来一周潮汐数据</Text>
-
-      {tideDays.slice(0, 7).map((day) => (
-        <View key={day.date}>
-          <TideChart
-            data={day.data}
-            date={day.date}
-            tideType={day.type}
-          />
+    <ScrollView scrollY className={styles.scrollContainer}>
+      <View className={styles.container}>
+        <View className={styles.titleSection}>
+          <Text className={styles.titleLabel}>Tide Height (m)</Text>
         </View>
-      ))}
+        <Text className={styles.mainTitle}>青岛未来一周潮汐数据</Text>
 
-      <View className={styles.spacer} />
-
-      <View className={styles.cameraSection}>
-        {camImgUrls.map((url, idx) => (
-          <View key={idx} className={styles.cameraCard}>
-            <Text className={styles.cameraName}>{camNames[idx]}</Text>
-            <View className={styles.cameraImageContainer}>
-              <Image
-                src={url}
-                alt={camNames[idx] + '实时图像'}
-                className={styles.cameraImage}
-                mode="aspectFill"
-              />
-            </View>
+        {tideDays.slice(0, 7).map((day) => (
+          <View key={day.date}>
+            <TideChart
+              data={day.data}
+              date={day.date}
+              tideType={day.type}
+            />
           </View>
         ))}
-      </View>
 
-      <View className={styles.footer}>
-        <Text className={styles.footerText}>
-          Copyright © {new Date().getFullYear()}
-        </Text>
+        <View className={styles.spacer} />
+
+        <View className={styles.cameraSection}>
+          {camImgUrls.map((url, idx) => (
+            <View key={idx} className={styles.cameraCard}>
+              <Text className={styles.cameraName}>{camNames[idx]}</Text>
+              <View className={styles.cameraImageContainer}>
+                <Image
+                  src={url}
+                  alt={camNames[idx] + '实时图像'}
+                  className={styles.cameraImage}
+                  mode="aspectFill"
+                />
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <View className={styles.footer}>
+          <Text className={styles.footerText}>
+            Copyright © {new Date().getFullYear()}
+          </Text>
+        </View>
       </View>
     </ScrollView>
   );

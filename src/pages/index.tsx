@@ -27,7 +27,6 @@ const IndexPage: React.FC = () => {
                 setTideDays(data);
             } catch (err) {
                 const errMsg = err instanceof Error ? err.message : String(err);
-                console.error('[IndexPage] Fetch error:', errMsg);
                 setError(`Failed to fetch tidal data: ${errMsg}`);
             } finally {
                 setLoading(false);

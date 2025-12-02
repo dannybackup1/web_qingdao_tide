@@ -21,7 +21,6 @@ export function getLunarDateStr(solarDate: string): string {
 
     return `${lunarMonth}月${lunarDay}`;
   } catch (e) {
-    console.error('Error converting lunar date:', solarDate, e);
     return '';
   }
 }

@@ -108,7 +108,6 @@ export const fetchTideData = async (): Promise<TideDay[]> => {
         return result;
     } catch (error) {
         const errMsg = error instanceof Error ? error.message : String(error);
-        console.error('[FetchTideData] Error:', errMsg, error);
         throw error;
     }
 };

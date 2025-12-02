@@ -15,8 +15,6 @@ export const getTideData = async () => {
         return response.data;
     } catch (error) {
         const errMsg = error instanceof Error ? error.message : String(error);
-        console.error('[TideAPI] Failed:', errMsg);
-        console.error('[TideAPI] Full error:', error);
         throw error;
     }
 };

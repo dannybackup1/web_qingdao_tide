@@ -32,7 +32,6 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         renderer.drawChart(ctx);
         ctx.draw();
       } catch (error) {
-        console.error('Error drawing chart:', error);
       }
     };
 
