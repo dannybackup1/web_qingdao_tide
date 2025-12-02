@@ -63,9 +63,8 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
       </div>
 
       <Canvas
-        ref={canvasRef}
         className={styles.canvas}
-        canvasId="tideChart"
+        canvasId={canvasId}
         type="2d"
       />
     </div>
