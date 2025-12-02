@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { Canvas } from '@tarojs/components';
+import { Canvas, View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { TideData } from '../../types/tide';
-import { formatTime, getLunarDateStr } from '../../utils/helpers';
+import { getLunarDateStr } from '../../utils/helpers';
 import { TideChartRenderer } from '../../utils/canvasChart';
 import styles from './index.module.scss';
 
