@@ -24,10 +24,10 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
       clearTimeout(renderTimeoutRef.current);
     }
 
-    const drawChart = async () => {
+    const drawChart = () => {
       try {
         // For Taro 4 with 2D canvas, use the proper API
-        const ctx = await Taro.createCanvasContext(canvasId);
+        const ctx = Taro.createCanvasContext(canvasId);
 
         if (!ctx) {
           console.warn('Canvas context not available');
@@ -47,9 +47,9 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
           ctx.draw();
         }
 
-        console.log('Chart rendered successfully');
+        console.log('[TideChart] Chart rendered successfully');
       } catch (error) {
-        console.error('Chart rendering error:', error);
+        console.error('[TideChart] Chart rendering error:', error);
       }
     };
 
