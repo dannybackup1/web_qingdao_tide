@@ -129,17 +129,16 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
           ctx.restore(); // 恢复路径状态
 
           // 2. 再画描边 (实线)
-          // 重新画一遍路径用于描边，确保不闭合到底部
+          // 重新画一遍路径用于描边，抛物线连接所有点
           ctx.beginPath();
           ctx.moveTo(points[0].x, points[0].y);
-          for (let i = 0; i < points.length - 1; i++) {
+          for (let i = 1; i < points.length; i++) {
+            const prev = points[i - 1];
             const curr = points[i];
-            const next = points[i + 1];
-            const cp1x = curr.x + (next.x - curr.x) / 2;
-            const cp1y = curr.y;
-            const cp2x = curr.x + (next.x - curr.x) / 2;
-            const cp2y = next.y;
-            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, next.x, next.y);
+            // 控制点为前后两点的中点
+            const cpx = (prev.x + curr.x) / 2;
+            const cpy = (prev.y + curr.y) / 2;
+            ctx.quadraticCurveTo(cpx, cpy, curr.x, curr.y);
           }
           
           ctx.strokeStyle = '#1a5490';
@@ -235,7 +234,7 @@ const TideChart: React.FC<TideChartProps> = ({ data, date, tideType }) => {
         type="2d"
         id={canvasId}
         className={styles.canvas}
-        style={{ width: '100%', height: `${canvasSize.height}px` }}
+        style={{ width: '100%', height: `${canvasSize.height}px`, pointerEvents: 'none' }}
       />
       <View className={styles.tideInfo}>
         <View className={styles.highTide}>

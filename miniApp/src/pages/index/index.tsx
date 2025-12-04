@@ -59,7 +59,7 @@ const IndexPage: React.FC = () => {
   }
 
   return (
-    <ScrollView className={styles.container} scrollY>
+    <View className={styles.container}>
       <View className={styles.scrollContent}>
         <View className={styles.titleSection}>
           <Text className={styles.titleLabel}>Tide Height (m)</Text>
@@ -100,7 +100,7 @@ const IndexPage: React.FC = () => {
           </Text>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
